@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${pageTitle})}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('libros')}"></nav>
+<div th:replace="~{fragments/layout :: alerts}"></div>
+
+<main class="container py-4 py-lg-5">
+    <section class="form-shell mx-auto">
+        <div class="form-shell-header mb-4">
+            <span class="eyebrow">Gestión de libros</span>
+            <h1 class="display-6 fw-bold mb-2" th:text="${pageTitle}">Nuevo libro</h1>
+            <p class="text-secondary mb-0">Registra la información editorial, serie y recursos complementarios.</p>
+        </div>
+
+        <form th:action="@{/libros/guardar}" th:object="${libroForm}" method="post" class="content-card p-4 p-lg-5">
+            <input type="hidden" th:field="*{id}">
+
+            <div class="row g-4">
+                <div class="col-md-7">
+                    <label class="form-label">Título</label>
+                    <input type="text" class="form-control" th:field="*{nomLibro}" placeholder="Cien años de soledad">
+                    <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('nomLibro')}" th:errors="*{nomLibro}"></div>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Año</label>
+                    <input type="number" class="form-control" th:field="*{ano}" placeholder="1967">
+                    <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('ano')}" th:errors="*{ano}"></div>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Índice de serie</label>
+                    <input type="number" class="form-control" th:field="*{indiceSerie}" placeholder="1">
+                    <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('indiceSerie')}" th:errors="*{indiceSerie}"></div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Serie</label>
+                    <select class="form-select" th:field="*{serieId}">
+                        <option value="">Sin serie</option>
+                        <option th:each="serie : ${series}" th:value="${serie.id}" th:text="${serie.denominacion}"></option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Archivo</label>
+                    <input type="text" class="form-control" th:field="*{nomArchivo}" placeholder="archivo.epub">
+                    <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('nomArchivo')}" th:errors="*{nomArchivo}"></div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Portada (URL)</label>
+                    <input type="text" class="form-control" th:field="*{portada}" placeholder="https://...">
+                    <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('portada')}" th:errors="*{portada}"></div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Película o adaptación</label>
+                    <input type="text" class="form-control" th:field="*{pelicula}" placeholder="Serie o película relacionada">
+                    <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('pelicula')}" th:errors="*{pelicula}"></div>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Comentario</label>
+                    <textarea class="form-control" th:field="*{comentario}" rows="5" placeholder="Notas adicionales del libro"></textarea>
+                    <div class="invalid-feedback d-block" th:if="${#fields.hasErrors('comentario')}" th:errors="*{comentario}"></div>
+                </div>
+            </div>
+
+            <div class="d-flex flex-wrap gap-3 mt-4">
+                <button class="btn btn-primary px-4" type="submit" th:text="${submitLabel}">Guardar cambios</button>
+                <a class="btn btn-outline-secondary" th:href="@{/libros}">Cancelar</a>
+            </div>
+        </form>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

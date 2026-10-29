@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Premios')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('premios')}"></nav>
+<div th:replace="~{fragments/layout :: alerts}"></div>
+
+<main class="container py-4 py-lg-5">
+    <section class="page-header mb-4">
+        <div>
+            <span class="eyebrow">Reconocimientos literarios</span>
+            <h1 class="display-6 fw-bold mb-2">Premios</h1>
+            <p class="text-secondary mb-0">Gestiona galardones, clasificación y país organizador.</p>
+        </div>
+        <div class="d-flex gap-3 align-items-center">
+            <div class="metric-card compact">
+                <span>Total</span>
+                <strong th:text="${totalPremios}">0</strong>
+            </div>
+            <a class="btn btn-primary" th:href="@{/premios/nuevo}"><i class="bi bi-plus-circle me-2"></i>Nuevo premio</a>
+        </div>
+    </section>
+
+    <section class="content-card p-0 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-modern align-middle mb-0">
+                <thead>
+                <tr>
+                    <th>Logo</th>
+                    <th>Premio</th>
+                    <th>Tipo</th>
+                    <th>País</th>
+                    <th>Año</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(premios)}">
+                    <td colspan="6" class="text-center py-5 text-secondary">No hay premios para mostrar.</td>
+                </tr>
+                <tr th:each="premio : ${premios}">
+                    <td>
+                        <img class="thumb-img thumb-logo"
+                             th:if="${premio.logotipo != null and !#strings.isEmpty(premio.logotipo)}"
+                             th:src="${#strings.startsWith(premio.logotipo, 'http') ? premio.logotipo : '/images/premios/' + premio.logotipo}"
+                             th:alt="${'Logo de ' + premio.nomPremio}">
+                        <span class="text-secondary small" th:if="${premio.logotipo == null or #strings.isEmpty(premio.logotipo)}">Sin logo</span>
+                    </td>
+                    <td>
+                        <div class="fw-semibold" th:text="${premio.nomPremio}">Premio</div>
+                        <div class="text-secondary small" th:text="${premio.localidad ?: 'Sin localidad'}">Localidad</div>
+                    </td>
+                    <td th:text="${premio.tipo}">Internacional</td>
+                    <td th:text="${premio.pais != null ? premio.pais.nomPais : '—'}">País</td>
+                    <td th:text="${premio.anyo ?: '—'}">2024</td>
+                    <td>
+                        <div class="d-flex justify-content-end gap-2">
+                            <a class="btn btn-sm btn-outline-primary" th:href="@{/premios/{id}/editar(id=${premio.id})}"><i class="bi bi-pencil-square"></i></a>
+                            <form th:action="@{/premios/{id}/eliminar(id=${premio.id})}" method="post" onsubmit="return confirm('¿Seguro que quieres eliminar este premio?');">
+                                <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-trash3"></i></button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

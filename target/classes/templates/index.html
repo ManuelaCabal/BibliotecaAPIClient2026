@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Inicio')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('inicio')}"></nav>
+<div th:replace="~{fragments/layout :: alerts}"></div>
+
+<main class="container py-4 py-lg-5">
+    <section class="hero-section p-4 p-lg-5 mb-4">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+                <span class="eyebrow mb-3 d-inline-flex align-items-center gap-2">
+                    <i class="bi bi-stars"></i> Gestión elegante de tu biblioteca
+                </span>
+                <h1 class="display-5 fw-bold mb-3">Administra autores, libros, países y premios desde un solo panel.</h1>
+                <p class="lead text-secondary mb-4">Este cliente MVC consume tu API `BibliotecaAPI26` en el puerto `8080` y te permite trabajar con los DTO de forma visual, rápida y profesional.</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a class="btn btn-primary btn-lg" th:href="@{/autores}"><i class="bi bi-people me-2"></i>Ir a autores</a>
+                    <a class="btn btn-outline-light btn-lg text-dark" th:href="@{/libros}"><i class="bi bi-book me-2"></i>Explorar libros</a>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="hero-panel p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div>
+                            <p class="text-uppercase text-secondary small mb-1">Conexión configurada</p>
+                            <h2 class="h4 mb-0">BibliotecaAPI26</h2>
+                        </div>
+                        <span class="status-pill"><i class="bi bi-router"></i> API local</span>
+                    </div>
+                    <div class="metric-card metric-card-inline mb-3">
+                        <span>Total autores</span>
+                        <strong th:text="${autoresCount}">0</strong>
+                    </div>
+                    <div class="metric-card metric-card-inline mb-3">
+                        <span>Total libros</span>
+                        <strong th:text="${librosCount}">0</strong>
+                    </div>
+                    <div class="metric-card metric-card-inline mb-3">
+                        <span>Total países</span>
+                        <strong th:text="${paisesCount}">0</strong>
+                    </div>
+                    <div class="metric-card metric-card-inline">
+                        <span>Total premios</span>
+                        <strong th:text="${premiosCount}">0</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-4">
+        <div class="row g-4">
+            <div class="col-md-6 col-xl-3">
+                <a class="text-decoration-none" th:href="@{/autores}">
+                    <article class="feature-card h-100">
+                        <div class="icon-bubble purple"><i class="bi bi-person-vcard"></i></div>
+                        <h3 class="h5 mt-4 mb-2 text-dark">Autores</h3>
+                        <p class="text-secondary mb-3">Crea, edita y elimina autores con datos biográficos, país y premios asociados.</p>
+                        <span class="feature-link">Abrir módulo <i class="bi bi-arrow-right-short"></i></span>
+                    </article>
+                </a>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <a class="text-decoration-none" th:href="@{/libros}">
+                    <article class="feature-card h-100">
+                        <div class="icon-bubble blue"><i class="bi bi-book-half"></i></div>
+                        <h3 class="h5 mt-4 mb-2 text-dark">Libros</h3>
+                        <p class="text-secondary mb-3">Gestiona catálogos, series, portadas, archivos y adaptaciones cinematográficas.</p>
+                        <span class="feature-link">Abrir módulo <i class="bi bi-arrow-right-short"></i></span>
+                    </article>
+                </a>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <a class="text-decoration-none" th:href="@{/paises}">
+                    <article class="feature-card h-100">
+                        <div class="icon-bubble emerald"><i class="bi bi-globe-europe-africa"></i></div>
+                        <h3 class="h5 mt-4 mb-2 text-dark">Países</h3>
+                        <p class="text-secondary mb-3">Mantén actualizada la información geográfica y visual de la biblioteca.</p>
+                        <span class="feature-link">Abrir módulo <i class="bi bi-arrow-right-short"></i></span>
+                    </article>
+                </a>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <a class="text-decoration-none" th:href="@{/premios}">
+                    <article class="feature-card h-100">
+                        <div class="icon-bubble amber"><i class="bi bi-trophy"></i></div>
+                        <h3 class="h5 mt-4 mb-2 text-dark">Premios</h3>
+                        <p class="text-secondary mb-3">Visualiza y administra reconocimientos, países organizadores y tipologías.</p>
+                        <span class="feature-link">Abrir módulo <i class="bi bi-arrow-right-short"></i></span>
+                    </article>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="info-strip p-4 p-lg-5">
+        <div class="row g-3 align-items-center">
+            <div class="col-lg-8">
+                <h2 class="h4 mb-2">MVC limpio y desacoplado</h2>
+                <p class="mb-0 text-secondary">La capa web usa Thymeleaf y Bootstrap; la capa de servicio consume la API REST externa mediante `RestClient`. Si tus rutas DTO cambian, puedes ajustarlas en `application.yml`.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <span class="badge rounded-pill text-bg-light px-3 py-2" th:text="${apiStatus}">API configurada</span>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

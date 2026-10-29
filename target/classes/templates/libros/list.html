@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Libros')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('libros')}"></nav>
+<div th:replace="~{fragments/layout :: alerts}"></div>
+
+<main class="container py-4 py-lg-5">
+    <section class="page-header mb-4">
+        <div>
+            <span class="eyebrow">Catálogo editorial</span>
+            <h1 class="display-6 fw-bold mb-2">Libros</h1>
+            <p class="text-secondary mb-0">Administra títulos, series y referencias audiovisuales.</p>
+        </div>
+        <div class="d-flex gap-3 align-items-center">
+            <div class="metric-card compact">
+                <span>Total</span>
+                <strong th:text="${totalLibros}">0</strong>
+            </div>
+            <a class="btn btn-primary" th:href="@{/libros/nuevo}"><i class="bi bi-plus-circle me-2"></i>Nuevo libro</a>
+        </div>
+    </section>
+
+    <section class="content-card p-0 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-modern align-middle mb-0">
+                <thead>
+                <tr>
+                    <th>Portada</th>
+                    <th>Título</th>
+                    <th>Año</th>
+                    <th>Serie</th>
+                    <th>Autores</th>
+                    <th>Premios</th>
+                    <th>Adaptación</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(libroRows)}">
+                    <td colspan="8" class="text-center py-5 text-secondary">No hay libros para mostrar.</td>
+                </tr>
+                <tr th:each="row : ${libroRows}" th:with="libro=${row.libro}">
+                    <td>
+                        <img class="thumb-img thumb-cover"
+                             th:if="${libro.portada != null and !#strings.isEmpty(libro.portada)}"
+                             th:src="${#strings.startsWith(libro.portada, 'http') ? libro.portada : '/images/libros/' + libro.portada}"
+                             th:alt="${'Portada de ' + libro.nomLibro}">
+                        <span class="text-secondary small" th:if="${libro.portada == null or #strings.isEmpty(libro.portada)}">Sin portada</span>
+                    </td>
+                    <td>
+                        <div class="fw-semibold" th:text="${libro.nomLibro}">Título</div>
+                        <div class="text-secondary small" th:text="${libro.nomArchivo ?: 'Sin archivo asociado'}">Archivo</div>
+                    </td>
+                    <td th:text="${libro.ano ?: '—'}">2024</td>
+                    <td>
+                        <div th:text="${libro.serie != null ? libro.serie.denominacion : 'Sin serie'}">Serie</div>
+                        <div class="text-secondary small" th:text="${libro.indiceSerie != null ? 'Volumen ' + libro.indiceSerie : ''}"></div>
+                    </td>
+                    <td>
+                        <div class="small mb-1" th:each="autor : ${row.autoresOrdenados}">
+                            <span class="fw-semibold" th:text="${#strings.trim((autor.nomAutor != null ? autor.nomAutor : '') + ' ' + (autor.apellido1 != null ? autor.apellido1 : '') + ' ' + (autor.apellido2 != null ? autor.apellido2 : ''))}">Autor</span>
+                        </div>
+                        <span class="text-secondary small" th:if="${#lists.isEmpty(row.autoresOrdenados)}">Sin autores asociados</span>
+                    </td>
+                    <td>
+                        <div class="small mb-1" th:each="premio : ${row.premiosOrdenados}">
+                            <img class="thumb-img thumb-logo me-2"
+                                 th:if="${premio.logotipo != null and !#strings.isEmpty(premio.logotipo)}"
+                                 th:src="${#strings.startsWith(premio.logotipo, 'http') ? premio.logotipo : '/images/premios/' + premio.logotipo}"
+                                 th:alt="${'Logo de ' + premio.nomPremio}">
+                            <span class="fw-semibold" th:text="${premio.nomPremio}">Premio</span>
+                            <span class="text-secondary" th:text="${premio.anyo != null ? ' (' + premio.anyo + ')' : ''}"></span>
+                        </div>
+                        <span class="text-secondary small" th:if="${#lists.isEmpty(row.premiosOrdenados)}">Sin premios</span>
+                    </td>
+                    <td th:text="${libro.pelicula ?: 'No'}">No</td>
+                    <td>
+                        <div class="d-flex justify-content-end gap-2">
+                            <a class="btn btn-sm btn-outline-primary" th:href="@{/libros/{id}/editar(id=${libro.id})}"><i class="bi bi-pencil-square"></i></a>
+                            <form th:action="@{/libros/{id}/eliminar(id=${libro.id})}" method="post" onsubmit="return confirm('¿Seguro que quieres eliminar este libro?');">
+                                <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-trash3"></i></button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

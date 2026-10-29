@@ -1,0 +1,19 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: BibliotecaAPIClient26
+  thymeleaf:
+    cache: false
+
+biblioteca:
+  api:
+    base-url: http://localhost:8082/api
+    paths:
+      autores: /autores/DTO
+      libros: /libros/DTO
+      autor-libro: /autor-libro
+      paises: /paises/DTO
+      premios: /premios/DTO
+      series: /series/DTO

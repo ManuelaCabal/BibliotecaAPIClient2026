@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Autores')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('autores')}"></nav>
+<div th:replace="~{fragments/layout :: alerts}"></div>
+
+<main class="container py-4 py-lg-5">
+    <section class="page-header mb-4">
+        <div>
+            <span class="eyebrow">Catálogo literario</span>
+            <h1 class="display-6 fw-bold mb-2">Autores</h1>
+            <p class="text-secondary mb-0">Consulta y administra los autores registrados en la API.</p>
+        </div>
+        <div class="d-flex gap-3 align-items-center">
+            <div class="metric-card compact">
+                <span>Total</span>
+                <strong th:text="${totalAutores}">0</strong>
+            </div>
+            <a class="btn btn-primary" th:href="@{/autores/nuevo}"><i class="bi bi-plus-circle me-2"></i>Nuevo autor</a>
+        </div>
+    </section>
+
+    <section class="content-card p-0 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-modern align-middle mb-0">
+                <thead>
+                <tr>
+                    <th>Foto</th>
+                    <th>Autor</th>
+                    <th>País</th>
+                    <th>Fechas</th>
+                    <th>Libros</th>
+                    <th>Premios</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(autorRows)}">
+                    <td colspan="7" class="text-center py-5 text-secondary">No hay autores para mostrar.</td>
+                </tr>
+                <tr th:each="row : ${autorRows}">
+                    <th:block th:with="autor=${row.autor}">
+                    <td>
+                        <img class="thumb-img thumb-autor"
+                             th:if="${autor.foto != null and !#strings.isEmpty(autor.foto)}"
+                             th:src="${#strings.startsWith(autor.foto, 'http') ? autor.foto : '/images/autores/' + autor.foto}"
+                             th:alt="${'Foto de ' + #strings.trim((autor.nomAutor != null ? autor.nomAutor : '') + ' ' + (autor.apellido1 != null ? autor.apellido1 : ''))}">
+                        <span class="text-secondary small" th:if="${autor.foto == null or #strings.isEmpty(autor.foto)}">Sin foto</span>
+                    </td>
+                    <td>
+                        <div class="fw-semibold" th:text="${#strings.trim((autor.nomAutor != null ? autor.nomAutor : '') + ' ' + (autor.apellido1 != null ? autor.apellido1 : '') + ' ' + (autor.apellido2 != null ? autor.apellido2 : ''))}">Autor</div>
+                        <div class="text-secondary small" th:text="${autor.localidad ?: 'Sin localidad'}">Localidad</div>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center gap-2" th:if="${autor.pais != null}">
+                            <img class="thumb-img thumb-flag"
+                                 th:if="${autor.pais.bandera != null and !#strings.isEmpty(autor.pais.bandera)}"
+                                 th:src="${#strings.startsWith(autor.pais.bandera, 'http') ? autor.pais.bandera : '/images/paises/' + autor.pais.bandera}"
+                                 th:alt="${'Bandera de ' + autor.pais.nomPais}">
+                            <span th:text="${autor.pais.nomPais}">País</span>
+                        </div>
+                        <span th:if="${autor.pais == null}">—</span>
+                    </td>
+                    <td>
+                        <div class="small" th:text="${autor.fechaNacimiento != null ? autor.fechaNacimiento : '—'}">—</div>
+                        <div class="small text-secondary" th:text="${autor.fechaDefuncion != null ? autor.fechaDefuncion : 'Actualidad'}">Actualidad</div>
+                    </td>
+                    <td>
+                        <div class="small mb-1" th:each="libro : ${row.librosOrdenados}">
+                            <span class="fw-semibold" th:text="${libro.nomLibro}">Libro</span>
+                            <span class="text-secondary" th:text="${libro.ano != null ? ' (' + libro.ano + ')' : ''}"></span>
+                        </div>
+                        <span class="text-secondary small" th:if="${#lists.isEmpty(row.librosOrdenados)}">Sin libros asociados</span>
+                    </td>
+                    <td>
+                        <div class="small mb-1" th:each="premioOrdenado : ${row.premiosOrdenados}">
+                            <img class="thumb-img thumb-logo me-2"
+                                 th:if="${premioOrdenado.logotipo != null and !#strings.isEmpty(premioOrdenado.logotipo)}"
+                                 th:src="${#strings.startsWith(premioOrdenado.logotipo, 'http') ? premioOrdenado.logotipo : '/images/premios/' + premioOrdenado.logotipo}"
+                                 th:alt="${'Logo de ' + premioOrdenado.nomPremio}">
+                            <span class="fw-semibold" th:text="${premioOrdenado.nomPremio}">Premio</span>
+                            <span class="text-secondary" th:text="${premioOrdenado.anyo != null ? ' (' + premioOrdenado.anyo + ')' : ''}"></span>
+                        </div>
+                        <span class="text-secondary small" th:if="${#lists.isEmpty(row.premiosOrdenados)}">Sin premios</span>
+                    </td>
+                    <td>
+                        <div class="d-flex justify-content-end gap-2">
+                            <a class="btn btn-sm btn-outline-primary" th:href="@{/autores/{id}/editar(id=${autor.id})}"><i class="bi bi-pencil-square"></i></a>
+                            <form th:action="@{/autores/{id}/eliminar(id=${autor.id})}" method="post" onsubmit="return confirm('¿Seguro que quieres eliminar este autor?');">
+                                <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-trash3"></i></button>
+                            </form>
+                        </div>
+                    </td>
+                    </th:block>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
